@@ -18,6 +18,7 @@ import java.util.Random;
 
 /**
  * This application utilizes JavaFX to create a GUI for generating random characters (numbers or letters) with text-fields for customization of output.
+ *
  */
 public class RandomCharGenerator extends Application {
 	public static void main(String[] args) {
