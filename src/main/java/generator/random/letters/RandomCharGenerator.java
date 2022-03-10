@@ -18,7 +18,7 @@ import java.util.Random;
 
 /**
  * This application utilizes JavaFX to create a GUI for generating random characters (numbers or letters) with text-fields for customization of output.
- *
+ * @author Kevin A Boykin
  */
 public class RandomCharGenerator extends Application {
 	public static void main(String[] args) {
@@ -38,6 +38,7 @@ public class RandomCharGenerator extends Application {
 		TextField txtfldAmountInput = new TextField();
 		TextField txtfldSetsInput = new TextField();
 		TextField txtfldShiftInput = new TextField();
+		
 		txtfldRangeInput.setPromptText("Input a positive integer...");
 		txtfldAmountInput.setPromptText("Input a positive integer...");
 		txtfldSetsInput.setPromptText("Input a positive integer...");
@@ -93,30 +94,41 @@ public class RandomCharGenerator extends Application {
 					lblResult);
 		});
 		
-//		FXMLLoader fxmlLoader = new FXMLLoader(RandomCharGenerator.class.getResource("hello-view.fxml"));
-//		Scene scene = new Scene(fxmlLoader.load(), 320, 240);
-		
 		Scene scene = new Scene(vboxRoot, 320, 240);
 		stage.setTitle("Random Letter Set Generator");
 		stage.setScene(scene);
 		stage.show();
 	}
 	
-	private void generateResults(TextField txtfldRangeInput,
-								 TextField txtfldAmountInput,
-								 TextField txtfldSetsInput,
-								 TextField txtfldShiftInput,
+	/**
+	 * This method handles generation of the results. <br>
+	 * Process outline:<br>
+	 * &#9;- Grabs text from text-fields and converts them to integers<br>
+	 * &#9;- Clears the output label (text-box)<br>
+	 * &#9;- Generates random numbers using the method generateNumbers()<br>
+	 * &#9;- Converts the numbers to letters if the checkbox is selected <br>
+	 * @param rangeInput     The range of possible numbers.
+	 * @param lengthInput    The length, or amount of numbers generated, for the set.
+	 * @param setsInput      The number of sets to generate.
+	 * @param shiftInput     The amount to shift the base, or lowest value, of the range. <br>&#9;<i>A shift value of 5, for a range of 3, would generate numbers [5-7].</i>
+	 * @param cboxConvertToLetters The checkbox control for determining whether to convert the generated numbers to letters.
+	 * @param lblResult            The text label to output the generated number/letter result.
+	 */
+	private void generateResults(TextField rangeInput,
+								 TextField lengthInput,
+								 TextField setsInput,
+								 TextField shiftInput,
 								 CheckBox cboxConvertToLetters,
 								 Label lblResult) {
 		
 		//grabs the text from the input field and casts as Integer
 		try {
-			int range = Integer.parseInt(txtfldRangeInput.getText());
-			int amount = Integer.parseInt(txtfldAmountInput.getText());
-			int sets = Integer.parseInt(txtfldSetsInput.getText());
-			int shift = Integer.parseInt(txtfldShiftInput.getText());
+			int range = Integer.parseInt(rangeInput.getText());
+			int length = Integer.parseInt(lengthInput.getText());
+			int sets = Integer.parseInt(setsInput.getText());
+			int shift = Integer.parseInt(shiftInput.getText());
 			
-			if (range == 0 || amount == 0) {
+			if (range == 0 || length == 0) {
 				throw new Exception("Values should be higher than zero.");
 			} else if (sets == 0) {
 				throw new Exception("Values should be higher than zero.");
@@ -126,7 +138,7 @@ public class RandomCharGenerator extends Application {
 			lblResult.setText("");
 			
 			for (int i = 0; i < sets; i++) {
-				ArrayList<String> generatedString = generateNumbers(range, amount, shift);
+				ArrayList<String> generatedString = generateNumbers(range, length, shift);
 				
 				if (cboxConvertToLetters.isSelected()) {
 					
@@ -134,7 +146,7 @@ public class RandomCharGenerator extends Application {
 					for (int j = 0; j < generatedString.size(); j++) {
 						int v = Integer.parseInt(generatedString.get(j));
 						char c = (char) (v + 65
-//								+ Integer.parseInt(txtfldShiftInput.getText())
+//								+ Integer.parseInt(shiftInput.getText())
 						);
 						generatedString.set(j, String.valueOf(c));
 					}
@@ -153,6 +165,13 @@ public class RandomCharGenerator extends Application {
 		
 	}
 	
+	/**
+	 * Generates random numbers and returns an ArrayList<String> to be optionally converted into character/letters.
+	 * @param range  parsed integer from TextField rangeInput
+	 * @param amount parsed integer from TextField amountInput
+	 * @param shift  parsed integer from TextField shiftInput
+	 * @return list of numbers as ArraryList<String>
+	 */
 	private ArrayList<String> generateNumbers(int range, int amount, int shift) {
 		
 		ArrayList<String> list = new ArrayList<>();
